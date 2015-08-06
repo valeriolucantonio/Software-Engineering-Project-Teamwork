@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, target-densitydpi=device-dpi" />
+
+        <link rel="stylesheet" href="lib/ratchet/css/ratchet.min.css">
+        <link rel="stylesheet" href="lib/icecream/icecream-grid.css">
+        <link rel="stylesheet" href="lib/leaflet/leaflet.css">
+        <link rel="stylesheet" href="style/style.css"/>
+        <title>Surveys App</title>
+
+<!--[if gte IE 5]> <style type="text/css"> #blanket {filter:alpha(opacity=65);}</style><![endif]-->
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#inputNodeVal").keydown(function (e) {
+        // Allow: backspace, delete, tab, escape, enter and .
+        if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+             // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) || 
+             // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+    });
+});
+
+document.addEventListener("deviceready", onDeviceReady, false);
+var dataToWrite="";
+
+function onDeviceReady() {
+
+navigator.splashscreen.show();
+setTimeout(function() {
+navigator.splashscreen.hide();
+}, 3000);
+var args;
+Cordova.exec(null, null, "EmailComposer", "showEmailComposer", [args]);
+}
+function savePDF(data,nameTree){
+var root;
+dataToWrite=data;
+var temp_root;
+var fileSys;
+//alert("About to request");
+window.requestFileSystem(window.LocalFileSystem.PERSISTENT, 0, function (fileSystem) {
+root = fileSystem.root;
+fileSys=fileSystem;
+//alert("external data dir"+cordova.file.externalDataDirectory);
+
+fileSystem.root.getFile(cordova.file.externalDataDirectory.replace(root.toURL(),"")+nameTree.replace(" ","")+".pdf", {create: true, exclusive: false}, gotFile, fail);
+//alert("Root!");
+//alert(root.toURL());
+// set in file.tests.js
+//persistent_root = root;
+}, error);
+}
+function fail(e) {
+//alert("FileSystem Error");
+console.dir(e);
+}
+function error(){
+//alert("WTFFFFFFFFFFFF");
+}
+function gotFile(fileEntry) {
+fileEntry.createWriter(gotFileWriter, fail);
+fileEntry.file(function(file) {
+//alert("GOT FILE");
+var reader = new FileReader();
+//alert("Before READ");
+reader.onloadend = function(e) {
+//alert("Text is: "+this.result);
+//document.querySelector("#textArea").innerHTML = this.result;
+}
+//alert("AFTER READ");
+});
+}
+function gotFileWriter(writer) {
+writer.onwrite = function(evt) {
+//alert("write success");
+};
+var doc = new jsPDF();
+//doc.text(20, 20, 'HELLO!');
+//alert("TESTTTTTTTT"+$('#SurveyView').text());
+doc.setFont("courier");
+doc.setFontType("normal");
+// doc.text(20, 30, dataToWrite);
+doc.text(20, 50, $('#wrap').text());
+var pdfOutput = doc.output();
+writer.write(pdfOutput);
+}
+
+function checkEval(a,b){
+    console.log(a);
+    console.log(b);
+return (Parser.evaluate(a,b));
+}
+</script>
+    </head>
+    <body> 
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="lib/ratchet/js/ratchet.min.js"></script>
+        <script data-main="js/main" src="lib/require/require.js"></script>
+        <script type="text/javascript" src="lib/popup/csspopup.js"></script>
+        <script type="text/javascript" src="lib/pdf/jspdf.js"></script>
+        <script type="text/javascript" src="lib/math/Parser.js"></script>
+    </body>
+</html>
