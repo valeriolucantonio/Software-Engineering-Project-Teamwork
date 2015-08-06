@@ -1,0 +1,201 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>Survey Builder</title>
+	<link rel="stylesheet" href="js/lib/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/base.css">
+	
+</head>
+
+<body>
+<div id="title_div">
+	<h1>Survey Builder</h1>
+	<h2 id="treeTitle"></h2>
+</div>
+
+
+<div id="panel">
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#surveys" role="tab" data-toggle="tab">Surveys</a></li>
+    <li><a href="#questions" id="questionsTab" role="tab" data-toggle="tab">Questions</a></li>
+  </ul>
+  
+<div class="tab-content">
+
+<div class="tab-pane active" id="surveys">
+
+	<div id="tree_selection" class="block">
+		<fieldset>
+			<legend>Survey Selection</legend>
+				<div id="tree_controls">
+					<input type="button" value="New survey" id="addTree" />
+					<input type="button" value="Delete" id="deleteTree" />
+				</div>
+			<select name="survey" id="survey" size="10"></select>
+			<p>&nbsp;</p>
+			<label for="availableLanguages">Languages</label>
+			<br/>
+			<select id="availableLanguages" name="availableLanguages" size="3"></select>   
+			<br/>
+			<input type="button" value="Delete" id="deleteLanguage" />
+			<p>&nbsp;</p>
+			<input type="textfield" id="newLanguage" size="40" placeholder="New language" />
+			<br/>
+			<input type="button" value="Add" id="addLanguage" />
+		</fieldset>
+	</div> <!-- end of tree_selection -->
+
+	<div id="tree_information" class="block">
+		<fieldset>
+			<legend>Survey Information</legend>
+			<div id="treeInformation">
+				<!-- The template with id=treeInfo will be placed in here -->
+			</div> <!-- end of treeInformation -->
+			<input type="button" value="Save changes" id="updateTree" class="save" />
+		</fieldset>
+    </div> <!-- end of tree_information -->
+
+</div> <!-- end of surveys -->
+
+<div class="tab-pane" id="questions">
+
+	<div id="node_information" class="block">          
+		<fieldset>
+		<legend>Question Selection</legend>
+              <div id="node_controls">
+                  <input type="button" value="Add question" id="addNode" />
+                  <input type="button" value="Delete" id="removeNode" />
+              </div> <!-- end of node_controls -->
+			<select id="nodeList" size="10"></select>
+			<p>&nbsp;</p>
+			<label for="availableLanguagesNodes">Language</label>
+			<br/>
+			<select id="availableLanguagesNodes" name="availableLanguagesNodes" size="3"></select>
+		</fieldset>  
+    </div> <!-- end of node_information -->
+	
+    <div id="node_information_detailed" class="block">
+		<fieldset>
+			<legend>Question Information</legend>
+			<label for="nodeName">Name</label> 
+			<br/>
+			<input type="text" id="nodeName" size="40" />
+			<p>&nbsp;</p>
+			<label for="nodeQuestion">Question</label>
+			<br />
+        	<textarea id="nodeQuestion" cols="40" rows="2"></textarea>
+        	<p>&nbsp;</p>
+			<label for="nodeInfo">Additonal information</label>
+			<br />
+			<textarea id="nodeInfo" cols="40" rows="4"> </textarea>
+			<p>&nbsp;</p>
+			<input type="button" value="Save changes" id="updateNode" class="save" />
+			<p>&nbsp;</p>
+			<label for="nodeEdges">Answers</label>
+			<br/>
+			<select id="nodeEdges" size="3"></select>
+			<p>&nbsp;</p>
+			<!-- <input type="button" value="Edit" /> -->
+			<input type="button" value="Add answer" id="addEdge" />
+			&nbsp;
+			<input type="button" value="Delete" id="removeEdge" />
+     	</fieldset>
+	</div>	<!-- node_information_detailed -->
+          
+	<div id="edgeForm" class="block">
+		<fieldset>
+			<legend>Answer</legend>
+			<label for="edgeText">Text</label>
+			<br/>
+			<input type="text" id="edgeText" size="40" />
+			<p>&nbsp;</p>
+			<label for="edgeValue">Value</label>
+			<br/>
+			<select id="edgeValue" size="3">
+				<option value="Positive">Positive</option>
+				<option value="Neutral">Neutral</option>
+				<option value="Negative">Negative</option>
+			</select>
+			<p>&nbsp;</p>
+			<label for="edgeNextNode">Next Node</label>
+			<br/>
+			<select id="edgeNextNode"><option class="nodeEdgeOptionClass" value="1">Generate Summary</option> </select>
+			<p>&nbsp;</p>
+			<label for="edgeResponse">Response</label>
+			<br/>
+			<textarea id="edgeResponse" cols="40" rows="8" placeholder="The response that will be in the report"></textarea>
+			<p>&nbsp;</p>
+			<input type="button" value="Save changes" id="saveEdge" class="save" />
+		</fieldset>
+	</div> <!-- end of edgeForm -->
+
+</div> <!-- end of questions -->	
+    
+</div> <!-- end of <div class="tab-content"> ? -->
+</div> <!-- end of panel ? -->
+   
+
+
+	<script type="text/template" id="tabs"><label><%= name %></label></script>
+	
+	<!-- 
+	With some of these templates, each option-element will have the same id.
+	An id should be unique for each page. 
+	But it does not have any practial importance.
+	-->	
+  <script type="text/template" id="tree_option"><option id="tree" value="<%= objectId %>"><%= name %> </option></script>
+  
+  <script type="text/template" id="selectLanguage"><option id="currentLanguage" value="<%= language %>"><%= language %> </option></script>
+  
+  <script type="text/template" id="treeInfo">
+				<label for="tree_id">Name</label>
+				<br/>
+				<input type="text" name="tree_id" id="treeName" value="<%= name %>" size="40" />
+				<p>&nbsp;</p>
+				<label for="tree_description">Description</label>
+				<br/>
+				<textarea name="tree_description" id="treeDescription"  cols="40" rows="5"><%= description %></textarea>
+				<p>&nbsp;</p>
+			</script>	
+ 
+
+    <script type="text/template" id="treeLanguages"><option id="tree" value="<%= language %>"><%= language %> </option></script>
+
+    <script type="text/template" id="nodeListOption"> <option class="nodeListOptionClass" value="<%= id %>"><%= name %></option> </script>
+    <script type="text/template" id="nodeLanguageOption"> <option class="nodeLanguageOptionClass" value="<%= language %>"><%= language %></option> </script>
+    
+    <script type="text/template" id="edgeNextNodeOption"> <option class="edgeNextNodeOptionClass" value="<%= id %>"><%= name %></option> </script>
+    <script type="text/template" id="nodeEdgesOption"> <option class="nodeEdgeOptionClass" value="<%= id %>"><%= text %></option> </script>
+    
+    
+    
+  <script src="js/lib/jquery.js"></script>
+  <script src="js/lib/underscore.js"></script>
+  <script src="js/lib/backbone/backbone.js"></script>
+  <script src="js/lib/parse/parse.js"></script>
+  <script src="js/lib/backbone.localStorage.js"></script>
+  <script src="js/lib/bootstrap/bootstrap.js"></script>
+ 
+  <script src="js/models/TreeModel.js"></script>
+  <script src="js/models/NodeModel.js"></script>
+  <script src="js/models/EdgeModel.js"></script>
+
+  <script src="js/collections/TreeCollection.js"></script>
+  <script src="js/collections/NodeCollection.js"></script>
+  <script src="js/collections/EdgeCollection2.js"></script>
+  
+  <script src="js/views/tab.js"></script>
+  <script src="js/views/treelist.js"></script>
+  <script src="js/views/availableLanguages.js"></script>
+  <script src="js/views/availableLanguagesNodes.js"></script>
+  <script src="js/views/treeInfo.js"></script>
+  <script src="js/views/treeLanguages.js"></script>
+	<script src="js/views/nodeList.js"></script>
+	<script src="js/views/edgeNextNode.js"></script>
+	<script src="js/views/nodeEdges.js"></script>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
